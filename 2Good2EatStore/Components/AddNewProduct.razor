@@ -1,37 +1,79 @@
 ﻿@page "/AddNewProduct"
+@using CloudinaryDotNet
+@using CloudinaryDotNet.Actions
 @rendermode InteractiveServer
+@inject Cloudinary Cloudinary
 
 <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
 <MudGrid Spacing="6" Class="mt-16">
     <MudItem xs="7">
+        <MudFileUpload T="IBrowserFile" FilesChanged="UploadFiles">
+            <ButtonTemplate>
+                <MudButton HtmlTag="label"
+                           Variant="Variant.Filled"
+                           Color="Color.Primary"
+                           StartIcon="@Icons.Material.Filled.CloudUpload"
+                           for="@context.Id">
+                    Upload using FileValueChanged
+                </MudButton>
+            </ButtonTemplate>
+        </MudFileUpload>
+        @if (files != null)
+        {
+            <MudText Typo="@Typo.h6">@files.Count() File@(files.Count() == 1 ? "" : "s"):</MudText>
+            <MudList>
+                @foreach (var file in files)
+                {
+                    <MudListItem Icon="@Icons.Material.Filled.AttachFile" @key="@file">
+                        @file.Name <code>@file.Size bytes</code>
+                    </MudListItem>
+                }
+            </MudList>
+        }
         <MudGrid>
             <MudItem xs="12">
                 <MudTextField T="string" Label="Display Name" />
             </MudItem>
             <MudItem xs="12">
-                <MudTextField T="string" Label="Mobile number" />
+                <MudTextField T="string" Label="Description" />
             </MudItem>
             <MudItem xs="12">
-                <MudTextField T="string" Label="Personal number" />
+                <MudTextField T="decimal" Label="Wholesale Cost" />
             </MudItem>
             <MudItem xs="6">
-                <MudTextField T="string" Label="First name" />
+                <MudTextField T="decimal" Label="Retail Cost" />
             </MudItem>
             <MudItem xs="6">
-                <MudTextField T="string" Label="Last name" />
-            </MudItem>
-            <MudItem xs="12">
-                <MudTextField T="string" Label="Address" />
-            </MudItem>
-            <MudItem xs="6">
-                <MudTextField T="string" Label="Postal code" />
-            </MudItem>
-            <MudItem xs="6">
-                <MudTextField T="string" Label="Postal Area" />
+                <MudTextField T="int" Label="Inventory" />
             </MudItem>
         </MudGrid>
     </MudItem>
+    <MudButton Disabled="@_processing" OnClick="Save" Variant="Variant.Filled" Color="Color.Primary">
+        @if (_processing)
+        {
+            <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
+            <MudText Class="ms-2">Processing</MudText>
+        }
+        else
+        {
+            <MudText>Save</MudText>
+        }
+    </MudButton>
 </MudGrid>
 @code {
+    private bool _processing = false;
+
+    async Task Save()
+    {
+        _processing = true;
+        await Task.Delay(2000);
+        _processing = false;
+    }
+    IList<IBrowserFile> files = new List<IBrowserFile>();
+    private void UploadFiles(IBrowserFile file)
+    {
+        files.Add(file);
+        
+    }
 
 }

@@ -6,6 +6,10 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/2good2eat/databases/2Good2Eat",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:AZURE_SQL_CONNECTIONSTRING"
+    },
+    "secrets1": {
+      "type": "secrets.user",
+      "dynamicId": null
     }
   }
 }

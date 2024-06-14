@@ -42,6 +42,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 var cloudinaryURL = builder.Configuration.GetConnectionString("CLOUDINARY_URL") ?? throw new InvalidOperationException("Connection string 'CLOUDINARY_URL' not found.");
 Cloudinary cloudinary = new(cloudinaryURL);
 cloudinary.Api.Secure = true;
+builder.Services.AddSingleton(cloudinary);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

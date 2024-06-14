@@ -9,7 +9,7 @@ namespace _2Good2EatStore.Data
 		public required string Description { get; set; }
 		public required ProductTypeEnum ProductType { get; set; }
 
-		public string ProductImageURL { get; set; }
+		public required string ProductImageURL { get; set; }
 
 	}
 }

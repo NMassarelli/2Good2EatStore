@@ -3,6 +3,10 @@
     "mssql2": {
       "type": "mssql",
       "connectionId": "ConnectionStrings:AZURE_SQL_CONNECTIONSTRING"
+    },
+    "secrets1": {
+      "type": "secrets",
+      "dynamicId": null
     }
   }
 }
