@@ -3,10 +3,12 @@
     <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
     <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Weather</MudNavLink>
 	<MudNavLink Href="auth" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Auth Required</MudNavLink>
+	<MudNavLink Href="store" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Store</MudNavLink>
 
 	<AuthorizeView>
 		<Authorized>
 			<MudNavLink Href="Account/Manage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">@context.User.Identity?.Name</MudNavLink>
+			<MudNavLink Href="AddNewProduct" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Approval">Add New Product</MudNavLink>
 		</Authorized>
 		<NotAuthorized>
 			<MudNavLink Href="Account/Register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Register</MudNavLink>

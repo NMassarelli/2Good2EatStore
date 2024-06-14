@@ -1,0 +1,37 @@
+﻿@page "/AddNewProduct"
+@rendermode InteractiveServer
+
+<MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
+<MudGrid Spacing="6" Class="mt-16">
+    <MudItem xs="7">
+        <MudGrid>
+            <MudItem xs="12">
+                <MudTextField T="string" Label="Display Name" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField T="string" Label="Mobile number" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField T="string" Label="Personal number" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField T="string" Label="First name" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField T="string" Label="Last name" />
+            </MudItem>
+            <MudItem xs="12">
+                <MudTextField T="string" Label="Address" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField T="string" Label="Postal code" />
+            </MudItem>
+            <MudItem xs="6">
+                <MudTextField T="string" Label="Postal Area" />
+            </MudItem>
+        </MudGrid>
+    </MudItem>
+</MudGrid>
+@code {
+
+}
