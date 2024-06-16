@@ -1,15 +1,15 @@
 {
   "dependencies": {
+    "secrets1": {
+      "type": "secrets.user",
+      "dynamicId": null
+    },
     "mssql2": {
       "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ServiceLinker/locations/eastus/connectors/ConnectionStringsAZURE_SQL_CONNECTIONSTR_F262E41750",
       "secretStore": "LocalSecretsFile",
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/2good2eat/databases/2Good2Eat",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:AZURE_SQL_CONNECTIONSTRING"
-    },
-    "secrets1": {
-      "type": "secrets.user",
-      "dynamicId": null
     }
   }
 }

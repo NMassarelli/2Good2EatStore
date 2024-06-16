@@ -1,15 +1,29 @@
 ﻿using _2Good2EatStore.Data.Enums;
+using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace _2Good2EatStore.Data
 {
 	public class Product
 	{
-		public required int Id { get; set; }
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id { get; set; }
 		public required string Name { get; set; }
 		public required string Description { get; set; }
 		public required ProductTypeEnum ProductType { get; set; }
 
 		public required string ProductImageURL { get; set; }
 
-	}
+        [DataType(DataType.Currency)]
+        [Precision(19, 4)]
+        public required decimal WholesalePrice { get; set; }
+
+        [DataType(DataType.Currency)]
+        [Precision(19, 4)]
+        public required decimal RetailPrice { get; set; }
+
+		public required int Inventory {  get; set; }
+    }
 }
