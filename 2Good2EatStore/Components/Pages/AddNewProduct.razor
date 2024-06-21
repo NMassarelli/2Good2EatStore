@@ -1,22 +1,24 @@
 ﻿@page "/AddNewProduct"
 @using CloudinaryDotNet
 @using CloudinaryDotNet.Actions
+@using Microsoft.AspNetCore.Authorization
 @using _2Good2EatStore.Data
 @using _2Good2EatStore.Data.Enums
 @rendermode InteractiveServer
 @inject Cloudinary cloudinary
+@attribute [Authorize]
 
-
+<AuthorizeView Context="authContext">
 <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
 <MudGrid Spacing="6" Class="mt-16">
     <MudItem xs="7">
-        <MudFileUpload T="IBrowserFile" FilesChanged="SetImage">
-            <ButtonTemplate>
+            <MudFileUpload T="IBrowserFile" OnFilesChanged="OnFilesChanged" FilesChanged="UploadFiles">
+            <ButtonTemplate >
                 <MudButton HtmlTag="label"
                            Variant="Variant.Filled"
                            Color="Color.Primary"
                            StartIcon="@Icons.Material.Filled.CloudUpload"
-                           for="@context.Id">
+                           for="@context">
                     Upload Image
                 </MudButton>
             </ButtonTemplate>
@@ -64,6 +66,7 @@
         }
     </MudButton>
 </MudGrid>
+</AuthorizeView>
 @code {
     private bool _processing = false;
     private Product? _newProduct;
@@ -76,6 +79,7 @@
     private string imageURL;
     private string imagePath;
     IBrowserFile? file;
+    private string newFileTest;
     async Task Save()
     {
         _processing = true;
@@ -105,10 +109,16 @@
         _processing = false;
     }
     
-    private void SetImage(IBrowserFile newImage)
+    private async Task OnFilesChanged(InputFileChangeEventArgs e)
     {
-       file = newImage;
-        
+        var file = e.File;
+       await UploadFiles(file); 
     }
-
+    private async Task UploadFiles(IBrowserFile file)
+    {
+        using (var reader = new StreamReader(file.OpenReadStream()))
+        {
+            newFileTest = await reader.ReadToEndAsync();
+        }
+    }
 }
