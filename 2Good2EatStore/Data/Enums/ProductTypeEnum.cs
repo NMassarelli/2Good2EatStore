@@ -1,4 +1,6 @@
-﻿namespace _2Good2EatStore.Data.Enums
+﻿using System.ComponentModel;
+
+namespace _2Good2EatStore.Data.Enums
 {
 	public enum ProductTypeEnum
 	{

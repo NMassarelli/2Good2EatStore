@@ -25,5 +25,9 @@ namespace _2Good2EatStore.Data
         public required decimal RetailPrice { get; set; }
 
 		public required int Inventory {  get; set; }
+
+        public required bool isVisible { get; set; }
+
+        public required bool isDeleted { get; set; }
     }
 }
