@@ -7,6 +7,8 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using Azure.Identity;
 using CloudinaryDotNet;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using _2Good2EatStore.Data.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +18,8 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+
+builder.Services.AddScoped<FileUploadUtilityService>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();

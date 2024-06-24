@@ -4,121 +4,108 @@
 @using Microsoft.AspNetCore.Authorization
 @using _2Good2EatStore.Data
 @using _2Good2EatStore.Data.Enums
+@using _2Good2EatStore.Data.Models
 @rendermode InteractiveServer
 @inject Cloudinary cloudinary
 @attribute [Authorize]
+@inject ApplicationDbContext context
+@inject FileUploadUtilityService utility
 
 <AuthorizeView Context="authContext">
-<MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
-<MudGrid Spacing="6" Class="mt-16">
-    <MudItem xs="7">
-            <MudFileUpload T="IBrowserFile" OnFilesChanged="OnFilesChanged" FilesChanged="UploadFiles">
-            <ButtonTemplate >
-                <MudButton HtmlTag="label"
-                           Variant="Variant.Filled"
-                           Color="Color.Primary"
-                           StartIcon="@Icons.Material.Filled.CloudUpload"
-                           for="@context.Id">
-                    Upload Image
-                </MudButton>
-            </ButtonTemplate>
-        </MudFileUpload>
-        @if (file != null)
-        {
-           <MudItem Icon="@Icons.Material.Filled.AttachFile" @key="@file">
-            @file.Name <code>@file.Size bytes</code>
-           </MudItem>
-        
-        }
-        <MudGrid>
-            <MudItem xs="12">
-                <MudTextField T="string" required @bind-Value="@_name" Label="Name" />
-            </MudItem>
-            <MudItem xs="12">
-                <MudTextField T="string" required @bind-Value="@_description" Label="Description" />
-            </MudItem>
-            <MudItem xs="12">
-                <MudTextField T="decimal?" required Format="currency" @bind-Value="@_wholesalePrice"  Label="Wholesale Price" />
-            </MudItem>
-            <MudItem xs="6">
-                <MudTextField T="decimal?" required @bind-Value="@_retailPrice" Label="Retail Price" />
-            </MudItem>
-            <MudItem xs="6">
-                <MudTextField T="int?" required @bind-Value="@_inventory" Label="Inventory" />
-            </MudItem>
-@*             <MudSelect @bind-Value="@_productType" T="ProductTypeEnum">
-                @foreach(var type in Enum.GetValues(typeof(ProductTypeEnum)))
+<EditForm Context ="formContext" Model="@productModel">
+        <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
+        <MudGrid Spacing="6" Class="mt-16">
+            <MudItem xs="7">
+                <MudFileUpload T="IBrowserFile" OnFilesChanged="OnFilesChanged">
+                    <ButtonTemplate>
+                        <MudButton HtmlTag="label"
+                                   Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.CloudUpload"
+                                   for="@context.Id">
+                            Upload Image
+                        </MudButton>
+                    </ButtonTemplate>
+                </MudFileUpload>
+                @if (file != null)
                 {
-                    <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
+                    <MudItem Icon="@Icons.Material.Filled.AttachFile" @key="@file">
+                        @file.Name <code>@file.Size bytes</code>
+                    </MudItem>
+
                 }
-            </MudSelect>  *@
+                <MudGrid>
+                    <MudItem xs="12">
+                        <MudTextField T="string" required @bind-Value="@productModel.Name" Label="Name" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField T="string" required @bind-Value="@productModel.Description" Label="Description" />
+                    </MudItem>
+                    <MudItem xs="12">
+                        <MudTextField T="decimal" required @bind-Value="@productModel.WholesalePrice" Label="Wholesale Price" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="decimal" required @bind-Value="@productModel.RetailPrice" Label="Retail Price" />
+                    </MudItem>
+                    <MudItem xs="6">
+                        <MudTextField T="int" required @bind-Value="@productModel.Inventory" Label="Inventory" />
+                    </MudItem>
+                    @*             <MudSelect @bind-Value="@_productType" T="ProductTypeEnum">
+                    @foreach(var type in Enum.GetValues(typeof(ProductTypeEnum)))
+                    {
+                    <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
+                    }
+                    </MudSelect>  *@
+                </MudGrid>
+            </MudItem>
+            <MudButton Disabled="@_processing" OnClick="Save" Variant="Variant.Filled" Color="Color.Primary">
+                @if (_processing)
+                {
+                    <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
+                    <MudText Class="ms-2">Processing</MudText>
+                }
+                else
+                {
+                    <MudText>Save</MudText>
+                }
+            </MudButton>
         </MudGrid>
-    </MudItem>
-    <MudButton Disabled="@_processing" OnClick="Save" Variant="Variant.Filled" Color="Color.Primary">
-        @if (_processing)
-        {
-            <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
-            <MudText Class="ms-2">Processing</MudText>
-        }
-        else
-        {
-            <MudText>Save</MudText>
-        }
-    </MudButton>
-</MudGrid>
+</EditForm>
+
 </AuthorizeView>
 @code {
     private bool _processing = false;
-    private Product? _newProduct;
-    private string? _name;
-    private string? _description;
-    private decimal? _wholesalePrice;
-    private decimal? _retailPrice;
-    private int? _inventory;
-    private ProductTypeEnum _productType;
-    private string imageURL;
-    private string imagePath;
+    private ProductModel productModel = new ProductModel();
     IBrowserFile? file;
-    private string newFileTest;
+    string fileName;
     async Task Save()
     {
         _processing = true;
 
         var uploadParams = new ImageUploadParams()
             {
-                File = new FileDescription(file.Name),
+                File = new FileDescription(fileName),
                 UseFilename = true,
                 UniqueFilename = false,
                 Overwrite = true
             };
         var uploadResult = cloudinary.Upload(uploadParams);
+        productModel.ProductImageURL = uploadResult.Url.OriginalString;
+        productModel.ProductType = ProductTypeEnum.CrochetPlushie;
 
-
-        _newProduct = new Product
-            {
-                Name = _name,
-                Description = _description,
-                ProductType = _productType,
-                Inventory = _inventory.Value,
-                ProductImageURL = imageURL,
-                RetailPrice = _retailPrice.Value,
-                WholesalePrice = _wholesalePrice.Value
-            };
+        context.Products.Add(ProductModel.MapToEntity(productModel));
+        await context.SaveChangesAsync();
 
 
         _processing = false;
+
     }
-    
+
     private async Task OnFilesChanged(InputFileChangeEventArgs e)
     {
-        var file = e.File;
-       await UploadFiles(file); 
-    }
-    private async Task UploadFiles(IBrowserFile file)
-    {
-        using (var reader = new StreamReader(file.OpenReadStream()))
-        {
-            newFileTest = await reader.ReadToEndAsync();
-        }
+       file = e.File;
+       fileName = await utility.MoveFileToRoot(file);
+
     }
 }
+
