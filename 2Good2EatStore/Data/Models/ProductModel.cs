@@ -7,6 +7,8 @@ namespace _2Good2EatStore.Data.Models
 {
     public class ProductModel
     {
+        public int Id { get; internal set; }
+
         public string? Name { get; set; }
         public string? Description { get; set; }
         public ProductTypeEnum ProductType { get; set; }
@@ -16,10 +18,16 @@ namespace _2Good2EatStore.Data.Models
         public int Inventory { get; set; }
         public bool IsVisible {  get; set; }
         public bool IsDeleted { get; set; }
-        public static Product MapToEntity (ProductModel model)
+
+    }
+
+    public static class ProductExtensionMethods
+    {
+        public static Product MapToEntity(this ProductModel model)
         {
             return new Product
             {
+                Id = model.Id,
                 Name = model.Name,
                 Description = model.Description,
                 ProductType = model.ProductType,

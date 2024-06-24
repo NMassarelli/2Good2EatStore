@@ -5,10 +5,11 @@
 @using _2Good2EatStore.Data
 @using _2Good2EatStore.Data.Enums
 @using _2Good2EatStore.Data.Models
+@using _2Good2EatStore.Data.Services
 @rendermode InteractiveServer
 @inject Cloudinary cloudinary
 @attribute [Authorize]
-@inject ApplicationDbContext context
+@inject ProductService productService
 @inject FileUploadUtilityService utility
 
 
@@ -76,7 +77,6 @@
             </MudButton>
         </MudGrid>
 </EditForm>
-
 </AuthorizeView>
 @code {
     private bool _processing = false;
@@ -96,10 +96,7 @@
             };
         var uploadResult = cloudinary.Upload(uploadParams);
         productModel.ProductImageURL = uploadResult.Url.OriginalString;
-
-        context.Products.Add(ProductModel.MapToEntity(productModel));
-        await context.SaveChangesAsync();
-
+        productService.SaveProduct(productModel.MapToEntity());
         productModel = new ProductModel();
         file = null;
         _processing = false;
