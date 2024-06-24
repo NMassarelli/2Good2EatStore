@@ -1,6 +1,7 @@
 ﻿using _2Good2EatStore.Data.Enums;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using FluentValidation;
 
 namespace _2Good2EatStore.Data.Models
 {
@@ -28,6 +29,20 @@ namespace _2Good2EatStore.Data.Models
             };
         }
     }
+
+    public class ProductModelFluentValidator : AbstractValidator<ProductModel>
+    { 
+        public ProductModelFluentValidator() 
+        {
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .Length(25);
+
+            RuleFor(x => x.Description)
+                .NotEmpty();
+        }
+    }
+
 
 
 }

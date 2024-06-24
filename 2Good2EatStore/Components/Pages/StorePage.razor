@@ -12,7 +12,7 @@
         @foreach (var item in dbContext.Products.ToList()) {
             <MudItem xs="12" sm="6" md="4">
                 <MudPaper Elevation="2" Class="pa-4" Style="height: 200px;" >
-                    <MudImage Src="@item.ProductImageURL"></MudImage>
+                    <MudImage Src="@item.ProductImageURL" Width="100"></MudImage>
                     <MudText>@item.Name</MudText>
                 </MudPaper>
         </MudItem>

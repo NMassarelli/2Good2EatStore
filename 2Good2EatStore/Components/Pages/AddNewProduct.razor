@@ -11,6 +11,7 @@
 @inject ApplicationDbContext context
 @inject FileUploadUtilityService utility
 
+
 <AuthorizeView Context="authContext">
 <EditForm Context ="formContext" Model="@productModel">
         <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
@@ -50,12 +51,16 @@
                     <MudItem xs="6">
                         <MudTextField T="int" required @bind-Value="@productModel.Inventory" Label="Inventory" />
                     </MudItem>
-                    @*             <MudSelect @bind-Value="@_productType" T="ProductTypeEnum">
-                    @foreach(var type in Enum.GetValues(typeof(ProductTypeEnum)))
-                    {
-                    <MudSelectItem Value="@type">@type.ToString()</MudSelectItem>
-                    }
-                    </MudSelect>  *@
+                <MudItem xs="6">
+                        <MudText for="body">Select type of product: </MudText>
+                        <InputSelect required @bind-Value="@productModel.ProductType">
+                            @foreach (var type in Enum.GetValues(typeof(ProductTypeEnum)))
+                            {
+                                <option value="@type">@type</option>
+                            }
+                        </InputSelect>
+                 </MudItem>
+
                 </MudGrid>
             </MudItem>
             <MudButton Disabled="@_processing" OnClick="Save" Variant="Variant.Filled" Color="Color.Primary">
@@ -91,12 +96,12 @@
             };
         var uploadResult = cloudinary.Upload(uploadParams);
         productModel.ProductImageURL = uploadResult.Url.OriginalString;
-        productModel.ProductType = ProductTypeEnum.CrochetPlushie;
 
         context.Products.Add(ProductModel.MapToEntity(productModel));
         await context.SaveChangesAsync();
 
-
+        productModel = new ProductModel();
+        file = null;
         _processing = false;
 
     }
