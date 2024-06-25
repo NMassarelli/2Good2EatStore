@@ -9,6 +9,8 @@ using Azure.Identity;
 using CloudinaryDotNet;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using _2Good2EatStore.Data.Interfaces;
+using _2Good2EatStore.Data.Services;
+using _2Good2EatStore.Data.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,8 +20,10 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddMudServices();
+builder.Services.AddBlazorBootstrap();
 
 builder.Services.AddScoped<FileUploadUtilityService>();
+builder.Services.AddScoped<ProductService>();
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -71,5 +75,4 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
-
 app.Run();

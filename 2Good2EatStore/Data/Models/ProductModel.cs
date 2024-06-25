@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
+using _2Good2EatStore.Data.Entities;
 
 namespace _2Good2EatStore.Data.Models
 {

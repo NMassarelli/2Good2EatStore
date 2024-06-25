@@ -1,4 +1,6 @@
-﻿namespace _2Good2EatStore.Data.Interfaces
+﻿using _2Good2EatStore.Data.Entities;
+
+namespace _2Good2EatStore.Data.Interfaces
 {
     public interface IProductService 
     {

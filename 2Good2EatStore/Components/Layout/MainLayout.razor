@@ -1,13 +1,14 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemingProvider />
+<MudThemeProvider Theme="MuudstrapTheme" />
+<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudText Typo="Typo.h5" Class="ml-3">Application</MudText>
-    </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
+    <MudAppBar Fixed="true" Elevation="5" DisableGutters="true" Class="muudstrap-navbar">
         <NavMenu />
-    </MudDrawer>
+    </MudAppBar>
     <MudMainContent Class="mt-16 pa-4">
         @Body
     </MudMainContent>
@@ -20,4 +21,28 @@
     {
         _drawerOpen = !_drawerOpen;
     }
+
+    MudTheme MuudstrapTheme = new MudTheme()
+        {
+            Palette = new PaletteDark(),
+            Typography = new Typography()
+            {
+                H6 = new H6()
+                {
+                    FontFamily = new[] { "system-ui", "-apple-system", "Segoe UI", "Roboto ", "Helvetica Neue", "Arial", "Noto Sans", "Liberation Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" },
+                    FontSize = "1.25rem",
+                    FontWeight = 400,
+                    LineHeight = 1.7,
+                    LetterSpacing = "normal"
+                },
+                Button = new MudBlazor.Button()
+                {
+                    FontFamily = new[] { "system-ui", "-apple-system", "Segoe UI", "Roboto ", "Helvetica Neue", "Arial", "Noto Sans", "Liberation Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" },
+                    FontSize = "1rem",
+                    FontWeight = 400,
+                    LineHeight = 1.5,
+                    LetterSpacing = "normal"
+                },
+            }
+        };
 }

@@ -1,4 +1,4 @@
-using _2Good2EatStore.Data;
+using _2Good2EatStore.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 

@@ -1,6 +1,6 @@
 using _2Good2EatStore.Components.Account.Pages;
 using _2Good2EatStore.Components.Account.Pages.Manage;
-using _2Good2EatStore.Data;
+using _2Good2EatStore.Data.Entities;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;

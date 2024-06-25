@@ -1,15 +1,13 @@
-﻿using _2Good2EatStore.Data.Interfaces;
+﻿using _2Good2EatStore.Data.Entities;
+using _2Good2EatStore.Data.Interfaces;
 using static MudBlazor.Icons;
 
 namespace _2Good2EatStore.Data.Services
 {
-    public class ProductService : IProductService
+    public class ProductService(ApplicationDbContext context) : IProductService
     {
-        private readonly ApplicationDbContext _dbContext;
-        public ProductService(ApplicationDbContext context)
-        {
-            _dbContext = context;
-        }
+        private readonly ApplicationDbContext _dbContext = context;
+
         public void DeleteProduct(int id)
         {
             var product = _dbContext.Products.FirstOrDefault(x => x.Id == id);
@@ -27,7 +25,7 @@ namespace _2Good2EatStore.Data.Services
 
         public List<Product> GetProducts()
         {
-            return _dbContext.Products.ToList();
+            return [.. _dbContext.Products];
         }
 
         public void SaveProduct(Product product)

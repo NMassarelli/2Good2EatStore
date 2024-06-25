@@ -1,19 +1,33 @@
-﻿<MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Home</MudNavLink>
-    <MudNavLink Href="counter" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Add">Counter</MudNavLink>
-    <MudNavLink Href="weather" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Weather</MudNavLink>
-	<MudNavLink Href="auth" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Auth Required</MudNavLink>
-	<MudNavLink Href="store/10/1" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Store</MudNavLink>
+﻿<MudPopoverProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-	<AuthorizeView>
-		<Authorized>
-			<MudNavLink Href="Account/Manage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">@context.User.Identity?.Name</MudNavLink>
-			<MudNavLink Href="AddNewProduct" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Approval">Add New Product</MudNavLink>
-		</Authorized>
-		<NotAuthorized>
-			<MudNavLink Href="Account/Register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Register</MudNavLink>
-			<MudNavLink Href="Account/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Login</MudNavLink>
-		</NotAuthorized>
-	</AuthorizeView>
+<div class="d-none d-md-flex align-center px-6">
+    <MudPaper Height="36px" Width="36px" Elevation="2" Class="pa-1 rounded-lg d-flex justify-center align-center mud-theme-primary">
+        <MudText Typo="Typo.h6">M</MudText>
+    </MudPaper>
+    <MudText Typo="Typo.h5" Class="ml-4 mr-12 pt-1 pb-2 mud-theme-primary-dark">Candle Kitchen</MudText>
+    <MudButton Href="/" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Store</MudButton>
 
-</MudNavMenu>
+    <MudContainer Class="loginStuff">
+        <AuthorizeView>
+            <Authorized>
+                <Dropdown>
+                    <DropdownToggleButton Color="ButtonColor.Dark">Management</DropdownToggleButton>
+                    <DropdownMenu>
+                        <DropdownItem To="Account/Manage/PersonalData" Type="BlazorBootstrap.ButtonType.Link">@context.User.Identity?.Name</DropdownItem>
+                        <DropdownItem To="AddNewProduct" Type="BlazorBootstrap.ButtonType.Link">Add New Product</DropdownItem>
+                    </DropdownMenu>
+                </Dropdown>
+            </Authorized>
+            <NotAuthorized>
+                <MudMenu Color="Color.Inherit" Label="Management" EndIcon="@Icons.Material.Filled.ArrowDropDown" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                    <MudMenuItem Href="Account/Register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Register</MudMenuItem>
+                    <MudMenuItem Href="Account/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Login</MudMenuItem>
+                </MudMenu>
+            </NotAuthorized>
+        </AuthorizeView>
+    </MudContainer>
+</div>
+
+

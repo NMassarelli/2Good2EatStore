@@ -1,7 +1,7 @@
 ﻿using _2Good2EatStore.Data.Interfaces;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace _2Good2EatStore.Data
+namespace _2Good2EatStore.Data.Services
 {
     public class FileUploadUtilityService(IWebHostEnvironment webHostEnvironment) : IFileUploadUtilityService
     {
@@ -30,7 +30,7 @@ namespace _2Good2EatStore.Data
                     memoryStream.WriteTo(fs);
                 }
 
-      
+
                 return path;
             }
             catch (Exception e)

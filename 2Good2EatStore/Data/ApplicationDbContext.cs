@@ -1,3 +1,4 @@
+using _2Good2EatStore.Data.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
