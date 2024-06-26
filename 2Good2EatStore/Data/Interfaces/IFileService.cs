@@ -2,7 +2,7 @@
 
 namespace _2Good2EatStore.Data.Interfaces
 {
-    public interface IFileUploadUtilityService
+    public interface IFileService
     {
         Task<string> MoveFileToRoot(IBrowserFile file);
     }

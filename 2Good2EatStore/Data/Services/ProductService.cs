@@ -1,4 +1,5 @@
 ﻿using _2Good2EatStore.Data.Entities;
+using _2Good2EatStore.Data.Enums;
 using _2Good2EatStore.Data.Interfaces;
 using static MudBlazor.Icons;
 
@@ -34,5 +35,12 @@ namespace _2Good2EatStore.Data.Services
             else _dbContext.Products.Update(product);
             _dbContext.SaveChanges();
         }
+
+        public List<Product> GetProductsByType(ProductTypeEnum type){
+
+            return [.. _dbContext.Products.Where(x => x.ProductType == type)];
+
+        }
+
     }
 }

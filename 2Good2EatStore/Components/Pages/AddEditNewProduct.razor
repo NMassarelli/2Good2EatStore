@@ -1,0 +1,146 @@
+﻿@page "/AddEditNewProduct"
+@using CloudinaryDotNet
+@using CloudinaryDotNet.Actions
+@using FluentValidation
+@using FluentValidation.Results
+@using Microsoft.AspNetCore.Authorization
+@using _2Good2EatStore.Data
+@using _2Good2EatStore.Data.Enums
+@using _2Good2EatStore.Data.Interfaces
+@using _2Good2EatStore.Data.Models
+@using _2Good2EatStore.Data.Services
+@inject Cloudinary cloudinary
+@attribute [Authorize]
+@inject IProductService productService
+@inject IFileService utility
+@inject MudBlazor.ISnackbar snackBar
+@inject ProductModelFluentValidator validator
+
+<AuthorizeView Context="authContext">
+    <MudContainer Class="mt-16 px-8 align-center" MaxWidth="MaxWidth.Large">
+        <MudForm Context="formContext" Model="@productModel" Validation="@this.Validation()" >
+            <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
+            <MudGrid Spacing="6" Class="mt-16">
+                <MudItem xs="7">
+
+                    <MudFileUpload T="IBrowserFile" OnFilesChanged="OnFilesChanged">
+                       <ActivatorContent>
+                        <MudButton Variant="Variant.Filled"
+                                   Color="Color.Primary"
+                                   StartIcon="@Icons.Material.Filled.CloudUpload"
+                                   >
+                            Upload Image
+                        </MudButton>
+                      </ActivatorContent>
+                    </MudFileUpload>
+                    @if (@productModel.file != null)
+                    {
+                        <MudItem @key="@productModel.file">
+                            @productModel.file.Name <code>@productModel.file.Size bytes</code>
+                        </MudItem>
+
+                    }
+                    <MudGrid>
+                        <MudItem xs="12">
+                            <MudTextField T="string" required @bind-Value="@productModel.Name" Label="Name" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField T="string" required @bind-Value="@productModel.Description" Label="Description" />
+                        </MudItem>
+                        <MudItem xs="12">
+                            <MudTextField T="decimal" required @bind-Value="@productModel.WholesalePrice" Label="Wholesale Price" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField T="decimal" required @bind-Value="@productModel.RetailPrice" Label="Retail Price" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudTextField T="int" required @bind-Value="@productModel.Inventory" Label="Inventory" />
+                        </MudItem>
+                        <MudItem xs="6">
+                            <MudText for="body">Select type of product: </MudText>
+                            <InputSelect required @bind-Value="@productModel.ProductType">
+                                @foreach (var type in Enum.GetValues(typeof(ProductTypeEnum)))
+                                {
+                                    <option value="@type">@type</option>
+                                }
+                            </InputSelect>
+                        </MudItem>
+
+                    </MudGrid>
+                </MudItem>
+                <MudButton Disabled="@_processing" OnClick="Save" Variant="Variant.Filled" Color="Color.Primary">
+                    @if (_processing)
+                    {
+                        <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
+                        <MudText Class="ms-2">Processing</MudText>
+                    }
+                    else
+                    {
+                        <MudText>Save</MudText>
+                    }
+                </MudButton>
+            </MudGrid>
+        </MudForm>
+    </MudContainer>
+</AuthorizeView>
+
+@code {
+    private bool _processing = false;
+    private ProductModel productModel;
+
+    [Parameter]
+    public int? productId { get; set; }
+
+    protected async override Task OnInitializedAsync()
+    {
+        productModel = productId == null ? new ProductModel() : productService.GetProductById(productId.Value).MapToModel();
+    }
+
+    async Task Save()
+    {
+        _processing = true;
+        if(productModel.file != null)
+        {
+            var uploadParams = new ImageUploadParams()
+                {
+                    File = new FileDescription(productModel.file.Name),
+                    UseFilename = true,
+                    UniqueFilename = false,
+                    Overwrite = true
+                };
+            var uploadResult = cloudinary.Upload(uploadParams);
+            productModel.ProductImageURL = uploadResult.Url.OriginalString;
+        }
+
+        productService.SaveProduct(productModel.MapToEntity());
+        productModel = new ProductModel();
+        _processing = false;
+        snackBar.Add("Product Saved.", MudBlazor.Severity.Success);
+
+    }
+
+    private async Task OnFilesChanged(InputFileChangeEventArgs e)
+    {
+        await utility.MoveFileToRoot(e.File);
+        productModel.file = e.File;
+
+    }
+
+    public ValidationResult Validation()
+    {
+        var validator = new ProductModelFluentValidator();
+        if(productModel.file != null)
+        {
+            return validator.Validate(productModel, options => options.IncludeRuleSets("default", "HasFile"));
+        }
+        else
+        {
+            return validator.Validate(productModel, options => options.IncludeRuleSets("default"));
+        }
+
+    }
+
+
+
+}
+

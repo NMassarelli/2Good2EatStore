@@ -3,11 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using FluentValidation;
 using _2Good2EatStore.Data.Entities;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace _2Good2EatStore.Data.Models
 {
     public class ProductModel
     {
+     
         public int Id { get; internal set; }
 
         public string? Name { get; set; }
@@ -19,6 +21,7 @@ namespace _2Good2EatStore.Data.Models
         public int Inventory { get; set; }
         public bool IsVisible {  get; set; }
         public bool IsDeleted { get; set; }
+        public IBrowserFile? file { get; set; }
 
     }
 
@@ -41,18 +44,51 @@ namespace _2Good2EatStore.Data.Models
 
             };
         }
+
+        public static ProductModel MapToModel(this Product entity)
+        {
+            return new ProductModel
+            {
+                Id = entity.Id,
+                Name = entity.Name,
+                Description = entity.Description,
+                ProductType = entity.ProductType,
+                ProductImageURL = entity.ProductImageURL,
+                Inventory = entity.Inventory,
+                RetailPrice = entity.RetailPrice,
+                WholesalePrice = entity.WholesalePrice,
+                IsDeleted = entity.isDeleted,
+                IsVisible = entity.isVisible,
+
+            };
+        }
     }
 
     public class ProductModelFluentValidator : AbstractValidator<ProductModel>
     { 
         public ProductModelFluentValidator() 
         {
-            RuleFor(x => x.Name)
-                .NotEmpty()
-                .Length(25);
+            RuleFor(x => x.Name).NotEmpty().Length(25);
 
             RuleFor(x => x.Description)
                 .NotEmpty();
+
+            RuleFor(x => x.ProductType)
+                .NotEmpty();
+
+            RuleFor(x => x.WholesalePrice).NotEmpty();
+
+            RuleFor(x => x.RetailPrice).NotEmpty();
+
+            RuleFor(x => x.WholesalePrice)
+                .LessThan(x => x.RetailPrice).WithMessage("Wholesale price should be lower than retail price wtf?");
+
+
+            RuleSet("HasFile", () =>
+            {
+                RuleFor(x => x.file.Size)
+                .LessThan(5000000).WithMessage("Your file is too big friend");
+            });
         }
     }
 

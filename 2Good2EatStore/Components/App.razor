@@ -13,11 +13,11 @@
 	<link rel="stylesheet" href="app.css" />
 	
     <link rel="icon" type="image/png" href="favicon.ico" />
-    <HeadOutlet />
+    <HeadOutlet @rendermode="GetRenderModeForPage()" />
 </head>
 
 <body>
-    <Routes />
+    <Routes @rendermode="GetRenderModeForPage()" />
     <script src="_framework/blazor.web.js"></script>
 	<script src="_content/MudBlazor/MudBlazor.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
@@ -31,3 +31,21 @@
 </body>
 
 </html>
+@code {
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private IComponentRenderMode? GetRenderModeForPage()
+    {
+        // Set RenderMode to SSR when route starts with "/Account" otherwise InteractiveServer- Identity Pages
+        InteractiveServerRenderMode? renderMode = HttpContext.Request.Path.StartsWithSegments("/Account") ? null : new InteractiveServerRenderMode(false);
+
+        // Generic Pages should be SSR
+        if ( HttpContext.Request.Path.Equals("/Error"))
+        {
+            renderMode = null;
+        }
+
+        return renderMode;
+    }
+}

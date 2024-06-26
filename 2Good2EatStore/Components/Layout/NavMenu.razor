@@ -1,24 +1,20 @@
-﻿<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+﻿@rendermode InteractiveServer
 
 <div class="d-none d-md-flex align-center px-6">
     <MudPaper Height="36px" Width="36px" Elevation="2" Class="pa-1 rounded-lg d-flex justify-center align-center mud-theme-primary">
-        <MudText Typo="Typo.h6">M</MudText>
+        <MudImage Src="/images/mascotflipped.png" Width="100"></MudImage>
     </MudPaper>
     <MudText Typo="Typo.h5" Class="ml-4 mr-12 pt-1 pb-2 mud-theme-primary-dark">Candle Kitchen</MudText>
-    <MudButton Href="/" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Store</MudButton>
+    <MudButton Href="/">Store</MudButton>
 
     <MudContainer Class="loginStuff">
         <AuthorizeView>
             <Authorized>
-                <Dropdown>
-                    <DropdownToggleButton Color="ButtonColor.Dark">Management</DropdownToggleButton>
-                    <DropdownMenu>
-                        <DropdownItem To="Account/Manage/PersonalData" Type="BlazorBootstrap.ButtonType.Link">@context.User.Identity?.Name</DropdownItem>
-                        <DropdownItem To="AddNewProduct" Type="BlazorBootstrap.ButtonType.Link">Add New Product</DropdownItem>
-                    </DropdownMenu>
-                </Dropdown>
+                <MudMenu Dense="true" Color="Color.Inherit" Label="Management" EndIcon="@Icons.Material.Filled.ArrowDropDown" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
+                    <MudMenuItem Href="Account/Manage/PersonalData">Account Data</MudMenuItem>
+                    <MudMenuItem Href="AddEditNewProduct">Add New Product</MudMenuItem>
+                    <MudMenuItem Href="Account/Logout">Logout</MudMenuItem>
+                </MudMenu>
             </Authorized>
             <NotAuthorized>
                 <MudMenu Color="Color.Inherit" Label="Management" EndIcon="@Icons.Material.Filled.ArrowDropDown" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">

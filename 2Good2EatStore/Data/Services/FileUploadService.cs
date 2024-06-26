@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace _2Good2EatStore.Data.Services
 {
-    public class FileUploadUtilityService(IWebHostEnvironment webHostEnvironment) : IFileUploadUtilityService
+    public class FileService(IWebHostEnvironment webHostEnvironment) : IFileService
     {
 
         private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
@@ -12,7 +12,7 @@ namespace _2Good2EatStore.Data.Services
         {
             try
             {
-                FileInfo fileInfo = new FileInfo(file.Name);
+                FileInfo fileInfo = new(file.Name);
                 var fileName = file.Name + fileInfo.Extension;
                 var folderDirectory = $"{_webHostEnvironment.WebRootPath}\\Images";
                 var path = Path.Combine(_webHostEnvironment.WebRootPath, "Images", fileName);

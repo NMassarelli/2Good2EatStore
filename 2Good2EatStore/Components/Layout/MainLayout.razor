@@ -1,12 +1,12 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="MuudstrapTheme" />
+<MudThemeProvider Theme="MuudstrapTheme" IsDarkMode="true" @rendermode="InteractiveServer" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MudAppBar Fixed="true" Elevation="5" DisableGutters="true" Class="muudstrap-navbar">
+    <MudAppBar Fixed="true" Elevation="5" Gutters="false" Class="muudstrap-navbar">
         <NavMenu />
     </MudAppBar>
     <MudMainContent Class="mt-16 pa-4">
@@ -15,16 +15,9 @@
 </MudLayout>
 
 @code {
-    private bool _drawerOpen = true;
-
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
 
     MudTheme MuudstrapTheme = new MudTheme()
         {
-            Palette = new PaletteDark(),
             Typography = new Typography()
             {
                 H6 = new H6()
@@ -45,4 +38,6 @@
                 },
             }
         };
+
+
 }
