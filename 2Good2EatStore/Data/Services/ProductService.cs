@@ -1,7 +1,7 @@
 ﻿using _2Good2EatStore.Data.Entities;
 using _2Good2EatStore.Data.Enums;
 using _2Good2EatStore.Data.Interfaces;
-using static MudBlazor.Icons;
+using static MudBlazor.CategoryTypes;
 
 namespace _2Good2EatStore.Data.Services
 {
@@ -24,21 +24,30 @@ namespace _2Good2EatStore.Data.Services
             return _dbContext.Products.FirstOrDefault(x => x.Id == id);
         }
 
-        public List<Product> GetProducts()
+        public IQueryable<Product> GetProducts()
         {
-            return [.. _dbContext.Products];
+            return _dbContext.Products.AsQueryable();
         }
 
         public void SaveProduct(Product product)
         {
-            if (product.Id == 0) _dbContext.Products.Add(product);
-            else _dbContext.Products.Update(product);
+            var trackedReference = _dbContext.Products.Local.SingleOrDefault(p => p.Id == product.Id);
+
+            if (trackedReference == null)
+            { 
+                _dbContext.Products.Update(product);
+            }
+            else if (!Object.ReferenceEquals(trackedReference, product))
+            {
+                _dbContext.Entry(trackedReference).CurrentValues.SetValues(product);
+            }
+
             _dbContext.SaveChanges();
         }
 
-        public List<Product> GetProductsByType(ProductTypeEnum type){
+        public IQueryable<Product> GetProductsByType(ProductTypeEnum type){
 
-            return [.. _dbContext.Products.Where(x => x.ProductType == type)];
+            return _dbContext.Products.Where(x => x.ProductType == type);
 
         }
 

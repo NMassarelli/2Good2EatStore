@@ -1,4 +1,4 @@
-﻿@page "/AddEditNewProduct"
+﻿@page "/AddEditNewProduct/{productId:int?}"
 @using CloudinaryDotNet
 @using CloudinaryDotNet.Actions
 @using FluentValidation
@@ -15,10 +15,12 @@
 @inject IFileService utility
 @inject MudBlazor.ISnackbar snackBar
 @inject ProductModelFluentValidator validator
+@inject NavigationManager NavigationManager
+
 
 <AuthorizeView Context="authContext">
     <MudContainer Class="mt-16 px-8 align-center" MaxWidth="MaxWidth.Large">
-        <MudForm Context="formContext" Model="@productModel" Validation="@this.Validation()" >
+        <MudForm Context="formContext" Model="@productModel" Validation="@this.Validation()" ValidationDelay="0" >
             <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
             <MudGrid Spacing="6" Class="mt-16">
                 <MudItem xs="7">
@@ -38,11 +40,10 @@
                         <MudItem @key="@productModel.file">
                             @productModel.file.Name <code>@productModel.file.Size bytes</code>
                         </MudItem>
-
                     }
                     <MudGrid>
                         <MudItem xs="12">
-                            <MudTextField T="string" required @bind-Value="@productModel.Name" Label="Name" />
+                            <MudTextField T="string" required  @bind-Value="@productModel.Name" Label="Name" />
                         </MudItem>
                         <MudItem xs="12">
                             <MudTextField T="string" required @bind-Value="@productModel.Description" Label="Description" />
@@ -59,34 +60,48 @@
                         <MudItem xs="6">
                             <MudText for="body">Select type of product: </MudText>
                             <InputSelect required @bind-Value="@productModel.ProductType">
-                                @foreach (var type in Enum.GetValues(typeof(ProductTypeEnum)))
+                                @foreach (var type in EnumHelper<ProductTypeEnum>.GetValues(ProductTypeEnum.None))
                                 {
-                                    <option value="@type">@type</option>
+                                    <option value="@type">@(EnumHelper<ProductTypeEnum>.GetDisplayValue(type))</option>
                                 }
                             </InputSelect>
                         </MudItem>
 
                     </MudGrid>
                 </MudItem>
-                <MudButton Disabled="@_processing" OnClick="Save" Variant="Variant.Filled" Color="Color.Primary">
-                    @if (_processing)
+                <MudItem>
+                    <MudButton Class="saveButton" Disabled="@this.isSaveDisabled()" OnClick="Save" Variant="Variant.Filled" Color="Color.Primary">
+                        @if (_processing)
+                        {
+                            <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
+                            <MudText Class="ms-2">Processing</MudText>
+                        }
+                        else if (!this.Validation().IsValid)
+                        {        
+                            <MudText>Invalid Form</MudText>
+                        }
+                        else
+                        {
+                            <MudText>Save</MudText>
+                        }
+                    </MudButton>
+                    @foreach (string error in validationErrors)
                     {
-                        <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
-                        <MudText Class="ms-2">Processing</MudText>
+                        <MudText Color="MudBlazor.Color.Error">@error</MudText>
                     }
-                    else
-                    {
-                        <MudText>Save</MudText>
-                    }
-                </MudButton>
+                </MudItem>
+           
             </MudGrid>
         </MudForm>
+
     </MudContainer>
 </AuthorizeView>
 
 @code {
     private bool _processing = false;
     private ProductModel productModel;
+    private List<string> validationErrors;
+    private string fileConstructedPath;
 
     [Parameter]
     public int? productId { get; set; }
@@ -103,7 +118,7 @@
         {
             var uploadParams = new ImageUploadParams()
                 {
-                    File = new FileDescription(productModel.file.Name),
+                    File = new FileDescription(fileConstructedPath),
                     UseFilename = true,
                     UniqueFilename = false,
                     Overwrite = true
@@ -116,12 +131,17 @@
         productModel = new ProductModel();
         _processing = false;
         snackBar.Add("Product Saved.", MudBlazor.Severity.Success);
+        NavigationManager.NavigateTo("/");
 
     }
 
     private async Task OnFilesChanged(InputFileChangeEventArgs e)
     {
-        await utility.MoveFileToRoot(e.File);
+        if (e.File.Size < utility.GetReadStreamSize())
+        {
+           fileConstructedPath= await utility.MoveFileToRoot(e.File);
+        }
+
         productModel.file = e.File;
 
     }
@@ -129,15 +149,31 @@
     public ValidationResult Validation()
     {
         var validator = new ProductModelFluentValidator();
-        if(productModel.file != null)
+        var result = new ValidationResult();
+
+        if(productModel.Id == 0)
         {
-            return validator.Validate(productModel, options => options.IncludeRuleSets("default", "HasFile"));
+            result = validator.Validate(productModel, options => options.IncludeRuleSets("default", "HasFile"));  
         }
         else
         {
-            return validator.Validate(productModel, options => options.IncludeRuleSets("default"));
+            result = validator.Validate(productModel, options => options.IncludeRuleSets("default")); 
         }
 
+        validationErrors = result.Errors.Select(x => x.ErrorMessage).ToList();
+
+        return result;
+    }
+
+    public bool isSaveDisabled()
+    {
+        if (_processing)
+            return true;
+
+        if (!this.Validation().IsValid)
+            return true;
+
+        return false;
     }
 
 

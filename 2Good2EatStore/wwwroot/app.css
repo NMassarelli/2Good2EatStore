@@ -35,7 +35,14 @@
     flex: auto;
 }
 
-.loginStuff{
-    align-content:flex-end
+.loginStuff {
+    position: absolute;
+    right: 20px;
 }
+
+.cart {
+    position: absolute;
+    right: 20px;
+}
+
 

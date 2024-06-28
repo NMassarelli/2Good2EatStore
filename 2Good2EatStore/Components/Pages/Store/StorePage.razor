@@ -1,8 +1,11 @@
 ﻿@page "/"
 @using _2Good2EatStore.Data
 @using _2Good2EatStore.Data.Entities
+@using Microsoft.EntityFrameworkCore;
+@using _2Good2EatStore.Data.Interfaces
+@using _2Good2EatStore.Data.Services
 @rendermode InteractiveServer
-@inject ApplicationDbContext dbContext
+@inject IProductService productService
 
     <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Large">
 @if (TotalProducts > 0)
@@ -19,7 +22,7 @@
                             <MudCardActions>
                                 <MudButton Variant="Variant.Text" Color="Color.Primary" Href="">Learn More</MudButton>
                                 <AuthorizeView>
-                                    <MudButton Variant="Variant.Text" Color="Color.Primary">Edit</MudButton>
+                                    <MudButton Href="@($"AddEditNewProduct/{item.Id}")"  Variant="Variant.Text" Color="Color.Primary">Edit</MudButton>
                                  </AuthorizeView>
                             </MudCardActions>
                         </MudCardContent>
@@ -57,14 +60,14 @@ else
 
     protected async override Task OnInitializedAsync()
     {
-        TotalProducts = dbContext.Products.Where(x => !x.isDeleted && x.isVisible).Count();
+        TotalProducts = productService.GetProducts().Where(x => !x.isDeleted && x.isVisible).Count();
         CalcPageCount();
         GetDisplayedProducts();
     }
 
     private void GetDisplayedProducts()
     {
-        DisplayedProducts =  dbContext.Products.Skip(CalcSkip()).Take(itemPerPageCount).ToList();
+        DisplayedProducts = productService.GetProducts().Skip(CalcSkip()).Take(itemPerPageCount).ToList();
     }
 
 

@@ -1,5 +1,7 @@
-﻿@inherits LayoutComponentBase
-
+﻿@using _2Good2EatStore.Data.Interfaces
+@inherits LayoutComponentBase
+@inject IProductService productService;
+@inject ICartService cartService;
 <MudThemeProvider Theme="MuudstrapTheme" IsDarkMode="true" @rendermode="InteractiveServer" />
 <MudPopoverProvider />
 <MudDialogProvider />

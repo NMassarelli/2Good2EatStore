@@ -1,29 +1,37 @@
-﻿@rendermode InteractiveServer
-
+﻿@using _2Good2EatStore.Data.Interfaces
+@rendermode InteractiveServer
+@inject ICartService cartService
 <div class="d-none d-md-flex align-center px-6">
     <MudPaper Height="36px" Width="36px" Elevation="2" Class="pa-1 rounded-lg d-flex justify-center align-center mud-theme-primary">
         <MudImage Src="/images/mascotflipped.png" Width="100"></MudImage>
     </MudPaper>
     <MudText Typo="Typo.h5" Class="ml-4 mr-12 pt-1 pb-2 mud-theme-primary-dark">Candle Kitchen</MudText>
-    <MudButton Href="/">Store</MudButton>
+    
 
     <MudContainer Class="loginStuff">
+        <MudButton Href="/">Store</MudButton>
         <AuthorizeView>
             <Authorized>
-                <MudMenu Dense="true" Color="Color.Inherit" Label="Management" EndIcon="@Icons.Material.Filled.ArrowDropDown" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
-                    <MudMenuItem Href="Account/Manage/PersonalData">Account Data</MudMenuItem>
-                    <MudMenuItem Href="AddEditNewProduct">Add New Product</MudMenuItem>
-                    <MudMenuItem Href="Account/Logout">Logout</MudMenuItem>
-                </MudMenu>
+                    <MudButton Href="Account/Manage/PersonalData">Account Data</MudButton>
+                    <MudButton Href="AddEditNewProduct">Add New Product</MudButton>
+                    <MudButton Href="Account/Logout">Logout</MudButton>
             </Authorized>
             <NotAuthorized>
-                <MudMenu Color="Color.Inherit" Label="Management" EndIcon="@Icons.Material.Filled.ArrowDropDown" AnchorOrigin="Origin.BottomLeft" TransformOrigin="Origin.TopLeft">
-                    <MudMenuItem Href="Account/Register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Register</MudMenuItem>
-                    <MudMenuItem Href="Account/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Login</MudMenuItem>
-                </MudMenu>
+                    <MudButton Href="Account/Register" Icon="@Icons.Material.Filled.List">Register</MudButton>
+                    <MudButton Href="Account/Login"  Icon="@Icons.Material.Filled.List">Login</MudButton>
             </NotAuthorized>
         </AuthorizeView>
-    </MudContainer>
+    </MudContainer >
+
+
+        <MudPaper Height="36px" Width="36px" Elevation="2" Class="pa-1 rounded-lg d-flex align-right mud-theme-primary cart">
+            <MudToggleIconButton Class="pa-1 rounded-lg d-flex align-right mud-theme-primary" Icon="@Icons.Material.TwoTone.ShoppingCart" ToggledIcon="@Icons.Material.TwoTone.ShoppingCartCheckout"></MudToggleIconButton>
+        </MudPaper>
+
+       
 </div>
 
+@code{
+
+}
 
