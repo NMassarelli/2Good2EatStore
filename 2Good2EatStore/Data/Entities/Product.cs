@@ -26,8 +26,8 @@ namespace _2Good2EatStore.Data.Entities
 
         public required int Inventory { get; set; }
 
-        public required bool isVisible { get; set; }
+        public required bool IsVisible { get; set; }
 
-        public required bool isDeleted { get; set; }
+        public required bool IsDeleted { get; set; }
     }
 }

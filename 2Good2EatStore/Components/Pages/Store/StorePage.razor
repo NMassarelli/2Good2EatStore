@@ -37,9 +37,9 @@ else
     <MudText>Sorry no products are available!</MudText>
 }
 
-    <MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="d-none d-md-flex align-center px-6">
+    <MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="navbits">
         <MudForm>
-            <MudPagination Color="Color.Primary"  Count="pageCount" SelectedChanged="OnSelectionChange" Class="align-self-center" />
+            <MudPagination Color="Color.Primary"  Count="pageCount" SelectedChanged="OnSelectionChange"  />
             <MudSelect T="int" Label="Items per Page" @bind-Value="@itemPerPageCount" >
                 <MudSelectItem T="int" Value="5"></MudSelectItem>
                 <MudSelectItem T="int" Value="10"></MudSelectItem>
@@ -60,7 +60,7 @@ else
 
     protected async override Task OnInitializedAsync()
     {
-        TotalProducts = productService.GetProducts().Where(x => !x.isDeleted && x.isVisible).Count();
+        TotalProducts = productService.GetProducts().Where(x => !x.IsDeleted && x.IsVisible).Count();
         CalcPageCount();
         GetDisplayedProducts();
     }

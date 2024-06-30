@@ -150,16 +150,7 @@
     {
         var validator = new ProductModelFluentValidator();
         var result = new ValidationResult();
-
-        if(productModel.Id == 0)
-        {
-            result = validator.Validate(productModel, options => options.IncludeRuleSets("default", "HasFile"));  
-        }
-        else
-        {
-            result = validator.Validate(productModel, options => options.IncludeRuleSets("default")); 
-        }
-
+        result = validator.Validate(productModel);  
         validationErrors = result.Errors.Select(x => x.ErrorMessage).ToList();
 
         return result;

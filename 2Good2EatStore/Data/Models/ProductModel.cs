@@ -39,8 +39,8 @@ namespace _2Good2EatStore.Data.Models
                 Inventory = model.Inventory,
                 RetailPrice = model.RetailPrice,
                 WholesalePrice = model.WholesalePrice,
-                isDeleted = model.IsDeleted,
-                isVisible = model.IsVisible,
+                IsDeleted = model.IsDeleted,
+                IsVisible = model.IsVisible,
 
             };
         }
@@ -57,8 +57,8 @@ namespace _2Good2EatStore.Data.Models
                 Inventory = entity.Inventory,
                 RetailPrice = entity.RetailPrice,
                 WholesalePrice = entity.WholesalePrice,
-                IsDeleted = entity.isDeleted,
-                IsVisible = entity.isVisible,
+                IsDeleted = entity.IsDeleted,
+                IsVisible = entity.IsVisible,
 
             };
         }
@@ -83,14 +83,10 @@ namespace _2Good2EatStore.Data.Models
             RuleFor(x => x.WholesalePrice)
                 .LessThan(x => x.RetailPrice).WithMessage("Wholesale price should be lower than retail price wtf?");
 
-
-            RuleSet("HasFile", () =>
-            {
-                RuleFor(x => x.file).NotNull().WithMessage("Friendo please upload a file")
+            RuleFor(x => x.file).NotNull().WithMessage("Friendo please upload a file")
                     .ChildRules( file=> file.RuleFor(x => x.Size).LessThan(5000000).WithMessage("Friendo please upload a file less than 5mb"));
                
-               
-            });
+
         }
         
     }
