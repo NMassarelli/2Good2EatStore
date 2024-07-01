@@ -45,9 +45,18 @@
     right: 20px;
 }
 
-.navBits{
-    position: center;
-    align-content:center
+.float-container{
 
+}
+
+.float-left {
+    float: left;
+    width: 10%;
+    justify-self:flex-start
+}
+
+.float-right {
+    float: right;
+    width: 70%;
 }
 

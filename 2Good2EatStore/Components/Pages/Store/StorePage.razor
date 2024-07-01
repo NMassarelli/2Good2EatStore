@@ -7,53 +7,62 @@
 @rendermode InteractiveServer
 @inject IProductService productService
 
-    <MudContainer Class="mt-16 px-8" MaxWidth="MaxWidth.Large">
-@if (TotalProducts > 0)
-{
-
-        <MudGrid>
-            @foreach (var item in DisplayedProducts)
-            {
-                <MudItem xs="12" sm="6" md="4">
-                    <MudCardMedia Image="@item.ProductImageURL" Height="200" Width="200" />
-                    <MudCard Outlined="true">
-                        <MudCardContent>
-                            <MudText>@item.Name</MudText>
-                            <MudCardActions>
-                                <MudButton Variant="Variant.Text" Color="Color.Primary" Href="">Learn More</MudButton>
-                                <AuthorizeView>
-                                    <MudButton Href="@($"AddEditNewProduct/{item.Id}")"  Variant="Variant.Text" Color="Color.Primary">Edit</MudButton>
-                                 </AuthorizeView>
-                            </MudCardActions>
-                        </MudCardContent>
-                    </MudCard>
-                </MudItem>
-            }
-        </MudGrid>
-
-} 
-else
-{
-    <MudText>Sorry no products are available!</MudText>
-}
-
-    <MudContainer MaxWidth="MaxWidth.ExtraSmall" Class="navbits">
-        <MudForm>
-            <MudPagination Color="Color.Primary"  Count="pageCount" SelectedChanged="OnSelectionChange"  />
-            <MudSelect T="int" Label="Items per Page" @bind-Value="@itemPerPageCount" >
-                <MudSelectItem T="int" Value="5"></MudSelectItem>
-                <MudSelectItem T="int" Value="10"></MudSelectItem>
-                <MudSelectItem T="int" Value="20"></MudSelectItem>
-            </MudSelect>
-        </MudForm>
+<MudContainer Class="float-container">
+    <MudContainer Class="float-left" MaxWidth="MaxWidth.ExtraSmall">
+        <MudPaper Elevation="25">
+            <MudToolBar>
+                <MudStack Justify="Justify.FlexStart" AlignItems="AlignItems.Start" StretchItems="StretchItems.Start" Row="true">
+                    <MudSelect T="int" Label="Items per Page" Class="perPage" @bind-Value="@itemPerPageCount">
+                        <MudSelectItem T="int" Value="5"></MudSelectItem>
+                        <MudSelectItem T="int" Value="10"></MudSelectItem>
+                        <MudSelectItem T="int" Value="20"></MudSelectItem>
+                    </MudSelect>
+                </MudStack>
+            </MudToolBar>
+        </MudPaper>
     </MudContainer>
-</MudContainer>
+    <MudContainer Class="mt-16 px-8 float-right" MaxWidth="MaxWidth.ExtraExtraLarge">
+        @if (TotalProducts > 0)
+        {
+            <MudGrid>
+                @foreach (var item in DisplayedProducts)
+                {
+                    <MudItem xs="12" sm="6" md="4">
+                        <MudCardMedia Image="@item.ProductImageURL" Height="200" Width="200" />
+                        <MudCard Outlined="true">
+                            <MudCardContent>
+                                <MudText>@item.Name</MudText>
+                                <MudCardActions>
+                                    <MudButton Variant="Variant.Text" Color="Color.Primary" Href="">Learn More</MudButton>
+                                    <AuthorizeView>
+                                        <MudButton Href="@($"AddEditNewProduct/{item.Id}")" Variant="Variant.Text" Color="Color.Primary">Edit</MudButton>
+                                    </AuthorizeView>
+                                </MudCardActions>
+                            </MudCardContent>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
 
+        }
+        else
+        {
+            <MudText>Sorry no products are available!</MudText>
+        }
+
+        <MudContainer MaxWidth="MaxWidth.ExtraSmall">
+            <MudPagination Color="Color.Primary" Count="pageCount" Class="pagination-sm" SelectedChanged="OnSelectionChange" />
+        </MudContainer>
+
+    </MudContainer>
+
+</MudContainer>
+ 
 
 @code {
 
     private int _selected = 1;
-    private int itemPerPageCount = 10;
+    private int itemPerPageCount = 20;
     private int pageCount;
     private int TotalProducts;
     private List<Product>? DisplayedProducts;
@@ -79,7 +88,7 @@ else
 
     private void CalcPageCount()
     {
-        pageCount = (int)Math.Round((decimal)TotalProducts/ itemPerPageCount);
+        pageCount = (int)Math.Round((decimal)TotalProducts/ itemPerPageCount,0,MidpointRounding.ToZero);
     }
 
     private int CalcSkip()
