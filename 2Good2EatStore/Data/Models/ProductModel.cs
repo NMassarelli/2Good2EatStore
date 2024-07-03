@@ -83,9 +83,14 @@ namespace _2Good2EatStore.Data.Models
             RuleFor(x => x.WholesalePrice)
                 .LessThan(x => x.RetailPrice).WithMessage("Wholesale price should be lower than retail price wtf?");
 
-            RuleFor(x => x.file).NotNull().WithMessage("Friendo please upload a file")
-                    .ChildRules( file=> file.RuleFor(x => x.Size).LessThan(5000000).WithMessage("Friendo please upload a file less than 5mb"));
-               
+
+            RuleSet("HasFile", () =>
+            {
+                RuleFor(x => x.file).NotNull().WithMessage("Friendo please upload a file")
+                    .ChildRules(file => file.RuleFor(x => x.Size).LessThan(5000000).WithMessage("Friendo please upload a file less than 5mb"));
+
+            });
+
 
         }
         

@@ -16,5 +16,11 @@ namespace _2Good2EatStore.Components.Account
 
             return user;
         }
+
+        public async Task AddAdminRole(ApplicationUser user)
+        {
+            await userManager.AddToRoleAsync(user, "Admin");
+
+        }
     }
 }

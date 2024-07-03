@@ -1,0 +1,84 @@
+﻿@page "/Account/Manage/Admin"
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.EntityFrameworkCore
+@using _2Good2EatStore.Data.Entities
+@using _2Good2EatStore.Data.Models
+@using MudBlazor
+@rendermode InteractiveServer
+
+@inject IdentityUserAccessor UserAccessor
+@inject UserManager<ApplicationUser> UserManager
+
+
+<PageTitle>Admin Data</PageTitle>
+
+<h3>Admin Data</h3>
+
+<div class="row">
+    <div class="col-md-6">
+        @if (userList?.Count > 0)
+        {     <MudForm>
+                    <InputSelect TValue="string" @bind-Value="userId">
+                    <option></option>
+                        @foreach(var u in userList)
+                        {
+                         <option @value="@u.Id"> @u.UserName </option>
+                        }
+                    </InputSelect>
+                <MudButton OnClick="@LoadUser()" Color="@MudBlazor.Color.Info"> Load </MudButton>
+            </MudForm>
+        }
+        @if(user != null){
+        <MudForm>
+
+            <MudTextField @bind-Value="@user.UserName" Required AdornmentText="User Name">TEST</MudTextField>
+            <MudTextField @bind-Value="@user.Email" Required AdornmentText="Email"></MudTextField>
+            <MudCheckBox T="Boolean" @bind-Value="@isAdmin" CheckedIcon="@Icons.Material.Filled.Check"> Is Admin?</MudCheckBox>
+        <MudButton OnClick="@SaveAdmin"></MudButton>
+        </MudForm>
+        }
+    </div>
+</div>
+
+@code {
+
+
+    private bool isAdmin { get; set; }
+    private ApplicationUser user ;
+    private string userId;
+    private List<ApplicationUser> userList;
+
+    protected override async Task OnInitializedAsync()
+    {
+        userList = await UserManager.Users.OrderBy(x => x.UserName).ToListAsync();
+    }
+
+    public async Task SaveAdmin()
+    {
+        var hasRole = UserManager.IsInRoleAsync(user, "Admin").Result;
+        if (isAdmin && !hasRole)
+        {
+            await UserManager.AddToRoleAsync(user, "Admin");
+        }
+
+        if (!isAdmin && hasRole)
+        {
+            await UserManager.RemoveFromRoleAsync(user, "Admin");
+        }
+
+        await UserManager.UpdateAsync(user);
+    }
+
+    public EventCallback LoadUser()
+    {
+        if(userId != null)
+         {
+                user = UserManager.Users.Where(x => x.Id == userId).FirstOrDefault();
+                isAdmin = UserManager.IsInRoleAsync(user, "Admin").Result;
+         }
+        return EventCallback.Empty;
+    }
+
+ 
+}
+

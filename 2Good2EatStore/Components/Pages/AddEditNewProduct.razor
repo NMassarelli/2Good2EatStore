@@ -18,7 +18,7 @@
 @inject NavigationManager NavigationManager
 
 
-<AuthorizeView Context="authContext">
+
     <MudContainer Class="mt-16 px-8 align-center" MaxWidth="MaxWidth.Large">
         <MudForm Context="formContext" Model="@productModel" Validation="@this.Validation()" ValidationDelay="0" >
             <MudText Typo="Typo.h3" Align="Align.Center" GutterBottom="true">Add New Product</MudText>
@@ -69,7 +69,16 @@
                                 }
                             </InputSelect>
                         </MudItem>
-
+                        <MudItem sx="6">
+                            <MudToggleIconButton Icon="@Icons.Material.Filled.CheckBox" Color="@Color.Error"
+                                                 ToggledIcon="@Icons.Material.Filled.CheckCircleOutline" ToggledColor="@Color.Success"
+                                                 @bind-Value="@productModel.IsDeleted">Deleted</MudToggleIconButton>
+                        </MudItem>
+                        <MudItem sx="6">
+                        <MudToggleIconButton Icon="@Icons.Material.Filled.CheckBox" Color="@Color.Error"
+                                                 ToggledIcon="@Icons.Material.Filled.CheckCircleOutline" ToggledColor="@Color.Success"
+                                                 @bind-Value="@productModel.IsVisible">Visible</MudToggleIconButton>
+                        </MudItem>
                     </MudGrid>
                 </MudItem>
                 <MudItem>
@@ -98,7 +107,6 @@
         </MudForm>
 
     </MudContainer>
-</AuthorizeView>
 
 @code {
     private bool _processing = false;
@@ -154,7 +162,15 @@
     {
         var validator = new ProductModelFluentValidator();
         var result = new ValidationResult();
-        result = validator.Validate(productModel);  
+        if (productModel.ProductImageURL is null)
+        {
+            result = validator.Validate(productModel, options => options.IncludeRuleSets("default", "HasFile"));
+        }
+        else
+        {
+            result = validator.Validate(productModel, options => options.IncludeRuleSets("default"));
+        }
+
         validationErrors = result.Errors.Select(x => x.ErrorMessage).ToList();
 
         return result;
