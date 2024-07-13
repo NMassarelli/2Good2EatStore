@@ -4,4 +4,4 @@
 Using Entity Framework, Azure Sql Server, Mudblazor, and Cloudinary for image hosting
 
 
-Abandoned due to the issues the latest issue of Blazor had with HTTPContext and Server vs Client side code. 
+Abandoned due to the issues the latest version of Blazor had with HTTPContext and Server vs Client side code. 
